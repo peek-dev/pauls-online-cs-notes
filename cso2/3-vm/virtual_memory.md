@@ -25,9 +25,9 @@ _Paging_ relies on hardware-friendly data structures and access patterns to bala
 
 Generally, paging _translates_ a **virtual address**, what your code sees, to a **physical address**, the place in the hardware ("on-chip") that data ca be found. Virtual addresses are used not only for memory operands (`movq $1, (%rax)` and similar), but to fetch instructions themselves from memory; in effect, every instruction involves at least one memory access, and two accesses for the cases that a memory address is an operand.
 
-Address translation uses a **page number** and a **page offset** for accesses. The page number can be either a _virtual page number_ (VPN), which determines where to focus the lookup within a given page table, or a _physical page number_ (PPN), which determines (when multiplied by the size of a page) the base address of the next-level page in the current translation. The page offset is directly determined by a system's page size: each bit in the page offset can address one byte within a page, i.e., page offset = $$\log_{2}(page size)$$.
+Address translation uses a **page number** and a **page offset** for accesses. The page number can be either a _virtual page number_ (VPN), which determines where to focus the lookup within a given page table, or a _physical page number_ (PPN), which determines (when multiplied by the size of a page) the base address of the next-level page in the current translation. The page offset is directly determined by a system's page size: each bit in the page offset can address one byte within a page, i.e., page offset = $$\log_{2}(page size)$$. The VPN size is determined from the page offset: the VPN size, as the number of page table entries that can be addressed within a given page, is the logarithm base-2 of the page size divided by the page table entry size, i.e. VPN bits = $$\log_{2}({page} {size})/({PTE} {size})$$.
 
-**Example**: the following virtual address 0x7fffffffe9a084d4 can be examined for page number and page offset. If the system's page size is 4096 bytes, then the page offset is 12 bits. For CSO2's purposes, the page offset commonly constitutes the least significant bits in an address, so the virtual address would be processed as:
+**Example**: the following virtual address `0x7fffffffe9a084d4` can be examined for page number and page offset. If the system's page size is 4096 bytes, then the page offset is 12 bits. For CSO2's purposes, the page offset commonly constitutes the least significant bits in an address, so the virtual address would be processed as:
 
 ```
 0x7fffffffe9a084d4 = 0b 0111 1111 1111 1111 1111 1111 1111 1111 1110 1001 1010 0000 1000 0100 1101 0100
@@ -35,6 +35,23 @@ Address translation uses a **page number** and a **page offset** for accesses. T
 0b | 0111 1111 1111 1111 1111 1111 1111 1111 1110 1001 1010 0000 1000 | 0100 1101 0100 |
    | <------------------------- PAGE NUMBER ------------------------->|<--- OFFSET --->|
 ```
+
+It can be easier to parse virtual addresses by writing them in binary, especially when the page offset does not cleanly align to a multiple of 4. This is how many examples in these notes will proceed.
+
+### Paging and Address Translation
+
+Our general pattern is:
+1. Use the VPN as the index into the current-level page table. Page tables are stored in memory just like data, and the address of top-level page table for each process is maintained by the operating system in a special, kernel-mode-only register (referred to here as the "page table base register"). 
+2. A page table entry (PTE) is retrieved from the page table by indexing with the VPN. The PTE will contain permissions and mapping information for the next-level page: whether the mapping exists (simplified as a "valid bit" here), whether the next-level page is read-only or read-write, whether the next-level page is kernel-mode-only, and more.
+    1. If the next-level mapping is invalid (does not exist), the hardware generates a **page fault** that the operating system then attempts to handle. The exception handling may result in the OS killing the process.
+    2. If the access type would violate permissions (kernel-mode-only, read-only) on the given page, the hardware generates a **protection fault** that the operating system then attempts to handle. The exception handling may result in the OS killing the process.
+3. If the mapping is valid, the PTE has a physical page number. When the mapping points to a data page, the final **physical address** if the physical page number "concatenated" with the page offset.
+
+# Page Tables
+
+Page tables can be thought of as an array of page table entries. Each page table takes up one page in memory. Page table entries may contain mappings to data pages themselves or to other page tables where the next level of a translation can continue.
+
+The contiguous nature of page tables makes indexing with a VPN easy (and therefore hardware-accessible). 
 
 [^1]: On a Unix-like system, particularly Linux.
 
