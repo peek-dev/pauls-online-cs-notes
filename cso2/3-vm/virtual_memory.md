@@ -21,7 +21,13 @@ Since segmentation in the most common form today is merely software-enforced, th
 
 ## 2.2 Pages
 
-_Paging_ relies on hardware-friendly data structures and access patterns to balance security with virtual memory and efficiency in memory accesses. Most commonly, operating systems maintain a data structure called a _page table_ that stores memory mapping information for one or multiple levels.
+_Paging_ relies on hardware-friendly data structures and access patterns to balance security with virtual memory and efficiency in memory accesses. Most commonly, operating systems maintain a data structure called a **page table** that stores memory mapping information for one or multiple levels. Like with "data memory" (e.g., part of the stack in a user process), page tables occupy exactly one page, even if mappings the page table stores may not all be valid. The advantage of paging over segmentation is that memory and associated data structures are more easily partitioned based on the agreed-upon page size. When designed well (particularly on modern operating systems), page tables involve a little bit more indirection through _multi-level translation_ (implementing page tables in effect as multi-level tree data structures) for the benefit of saving space and avoiding the possibility that a page table overwhelms an entire system's memory.
+
+Generally, paging _translates_ a **virtual address**, what your code sees, to a **physical address**, the place in the hardware ("on-chip") that data ca be found. Virtual addresses are used not only for memory operands (`movq $1, (%rax)` and similar), but to fetch instructions themselves from memory; in effect, every instruction involves at least one memory access, and two accesses for the cases that a memory address is an operand.
+
+Address translation uses a **page number** and a **page offset** for accesses. The page number can be either a _virtual page number_ (VPN), which determines where to focus the lookup within a given page table, or a _physical page number_ (PPN), which determines (when multiplied by the size of a page) the base address of the next-level page in the current translation. The page offset is directly determined by a system's page size: each bit in the page offset can address a byte within a page, i.e., $page offset = $log_{2}($page size$) = 12$$.
+
+**Example**: the following virtual address 0x7fffffffe9a084d4 can be examined for page number and page offset. 
 
 [^1]: On a Unix-like system, particularly Linux.
 
