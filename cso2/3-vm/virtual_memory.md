@@ -27,7 +27,14 @@ Generally, paging _translates_ a **virtual address**, what your code sees, to a 
 
 Address translation uses a **page number** and a **page offset** for accesses. The page number can be either a _virtual page number_ (VPN), which determines where to focus the lookup within a given page table, or a _physical page number_ (PPN), which determines (when multiplied by the size of a page) the base address of the next-level page in the current translation. The page offset is directly determined by a system's page size: each bit in the page offset can address one byte within a page, i.e., page offset = $$\log_{2}(page size)$$.
 
-**Example**: the following virtual address 0x7fffffffe9a084d4 can be examined for page number and page offset. 
+**Example**: the following virtual address 0x7fffffffe9a084d4 can be examined for page number and page offset. If the system's page size is 4096 bytes, then the page offset is 12 bits. For CSO2's purposes, the page offset commonly constitutes the least significant bits in an address, so the virtual address would be processed as:
+
+```
+0x7fffffffe9a084d4 = 0b 0111 1111 1111 1111 1111 1111 1111 1111 1110 1001 1010 0000 1000 0100 1101 0100
+
+0b | 0111 1111 1111 1111 1111 1111 1111 1111 1110 1001 1010 0000 1000 | 0100 1101 0100 |
+   | <------------------------- PAGE NUMBER ------------------------->|<--- OFFSET --->|
+```
 
 [^1]: On a Unix-like system, particularly Linux.
 
