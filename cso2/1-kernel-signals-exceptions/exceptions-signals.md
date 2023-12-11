@@ -1,25 +1,25 @@
-# 2 Exceptions
+# Exceptions
 
 _Exceptions_ in name can be considered with respect to control flow (_exceptions_ to standard sequencing and jumps) and to expected situations (_exceptional_ situations).
 
-## 2.1 Kinds
+## Kinds
 Terminology varies, but these are CSO2 definitions.
 
-### 2.1.1 Interrupts
+### Interrupts
 These are asynchronous events that, once noticed, trigger interrupt handler code within the kernel that is well-separated from user code. Interrupt handlers run as soon as possible and "freeze" user processes in place before interpreting the interrupt and resuming the previous user process.
 
-### 2.1.2 Faults
+### Faults
 These are calls for assistance raised when instructions are unsuccessful. These could be related to arithmetic (zero division), memory access (null pointers or general _page faults_), or privilege (attempting to run kernel-mode code in user mode).
 
-### 2.1.3 Traps
+### Traps
 These are deliberate, dedicated exception-raising instructions designed to prompt a switch to kernel mode. Traps are typically wrapped in various _system calls_ that, when invoked by user mode code, trigger the kernel to actually carry out the work involved for tasks like file (and file system) interactions, thread creation and waiting, and reading input.
 
 User-mode code itself has a _very limited_ direct interface with the hardware. Instead, user-mode code has far more ability to interact with the _system call interface_ which run the kernel under controlled conditions; the kernel itself has complete and unrestricted permission to interface with hardware. 
 
-## 2.2 Handling
+## Handling
 The processor handles an exception by switching to kernel mode and executing an _exception handler_ in kernel memory. Exceptions are often _asynchronous_ and can therefore occur at any point in code execution. To properly guarantee a save-and-restore pattern for a running process, the exception handler also saves processor state (program registers, stack, etc.) before running the rest of the handler.
 
-### 2.2.1 Save-Handle-Restore
+### Save-Handle-Restore
 Specifically, the flow of an exception handler is:
 1. Save aspects of processor state like program counter, registers, and kernel mode bit
 2. Enter kernel mode
@@ -28,7 +28,7 @@ Specifically, the flow of an exception handler is:
 
 With the exception of when the actual "substance" of the exception handler is running (i.e., any portion not between starting formal exception handling in step 3 and finishing up in step 4), all steps happen atomically. Saving the state of the processor, jumping to kernel mode, and jumping back to user mode cannot be interrupted, but the actual exception handling may be halted upon recording another exception.
 
-### 2.2.2 Which Handler?
+### Which Handler?
 There are many exception _causes_ which there must be many _handlers_ for. The hardware consults an **exception table** to decide which exception maps to which handler. This is simply an array of code addresses with which an exception number corresponds to an index (the **exception number** or **vector number**).
 
 ---
@@ -97,7 +97,7 @@ Again, this really constitutes an array of code addresses (often _function point
 
 ---
 
-### 2.2.3 After the Handler
+### After the Handler
 Handlers have the discretion to resume user code or to abort user code if the exception is unrecoverable.
 
 The handler will have slightly different return behavior depending on the exception's original cause. 
@@ -128,7 +128,7 @@ void HandleCertainException(void) {
 ```
 ---
 
-### 2.2.4 Linux system calls
+### Linux system calls
 In Linux, user-to-kernel code communication gets assigned a trap with exception/vector number 128. The exception number is not directly used to select which system call gets run; rather, a number is first placed into `%rax` to select the system call before the general `syscall` trap instruction is executed. 
 
 Linux system calls are given at `man 2 syscall` for reference. There are many system call _wrappers_ in the C standard library as listed in `man 2 syscalls`.
@@ -173,9 +173,9 @@ System call interfaces are quite low-level even with the abstraction that wrappe
 
 ---
 
-## 2.3 Exception-Like Constructs
+## Exception-Like Constructs
 
-### 2.3.1 Signals
+### Signals
 
 Signals allow kernel-to-user code communication. The following table also lists exception types and communication methods:
 
