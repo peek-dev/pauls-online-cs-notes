@@ -51,7 +51,17 @@ Our general pattern is:
 
 Page tables can be thought of as an array of page table entries. Each page table takes up one page in memory. Page table entries may contain mappings to data pages themselves or to other page tables where the next level of a translation can continue.
 
-The contiguous nature of page tables makes indexing with a VPN easy (and therefore hardware-accessible). 
+The contiguous nature of page tables makes indexing with a VPN easy (and therefore hardware-accessible). PTEs are retrieved at the given index and then parsed for next-level mapping information.
+
+**Example:** for page size = 256 bytes and PTE size = 8 bytes, there are 32 PTEs per page, and a page table for the system may be represented as:
+
+| VPN (not stored)	| Stored PTE		|
+| ---------------------	| ---------------------	|
+| `[0]`			| `0x0123456789abcdef`	|
+| `[1]`			| `0x1980198119821983`	|
+| `[2]`			| `0x7fffabcd34561298`	|
+| [...]			| [...]			|
+| `[31]`		| `0x4364579872310012`	|
 
 [^1]: On a Unix-like system, particularly Linux.
 
