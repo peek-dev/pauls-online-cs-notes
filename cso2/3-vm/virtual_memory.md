@@ -25,7 +25,7 @@ _Paging_ relies on hardware-friendly data structures and access patterns to bala
 
 Generally, paging _translates_ a **virtual address**, what your code sees, to a **physical address**, the place in the hardware ("on-chip") that data ca be found. Virtual addresses are used not only for memory operands (`movq $1, (%rax)` and similar), but to fetch instructions themselves from memory; in effect, every instruction involves at least one memory access, and two accesses for the cases that a memory address is an operand.
 
-Address translation uses a **page number** and a **page offset** for accesses. The page number can be either a _virtual page number_ (VPN), which determines where to focus the lookup within a given page table, or a _physical page number_ (PPN), which determines (when multiplied by the size of a page) the base address of the next-level page in the current translation. The page offset is directly determined by a system's page size: each bit in the page offset can address one byte within a page, i.e., page offset = $$log_{2}(page size)$$.
+Address translation uses a **page number** and a **page offset** for accesses. The page number can be either a _virtual page number_ (VPN), which determines where to focus the lookup within a given page table, or a _physical page number_ (PPN), which determines (when multiplied by the size of a page) the base address of the next-level page in the current translation. The page offset is directly determined by a system's page size: each bit in the page offset can address one byte within a page, i.e., page offset = $$\log_{2}(page size)$$.
 
 **Example**: the following virtual address 0x7fffffffe9a084d4 can be examined for page number and page offset. 
 
