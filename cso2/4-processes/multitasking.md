@@ -1,8 +1,8 @@
 # Computers and multitasking
 
-Consider the problem of adding up the square root of $$x$$ numbers.
+Consider the problem of adding up the square root of $x$ numbers.
 
-For a simple case, we can choose $$x = 10$$. Writing a for loop to add up the first ten numbers (1-indexed, so 1 to 10) naturally follows:
+For a simple case, we can choose $x = 10$. Writing a for loop to add up the first ten numbers (1-indexed, so 1 to 10) naturally follows:
 
 ```c
 double sum = 0.0;
