@@ -58,6 +58,8 @@ agent 4 runs:
     same thing for [7500000001, 10000000000] inclusive
 ```
 
+Approaching the problem _this_ way means we can shave off a good ten seconds and complete the sum in about 5 seconds total---a substantial improvement.
+
 More formally, we are structuring the above code so that the agents run "in parallel": as much as possible, each agent doesn't depend on the work of other agents. The agents only depend on each other to agree upon and enforce _safe_[^2] addition to the shared sum. We have _parallelized_ our code (and _parallelized_ the problem generally).
 
 Depending on the context, we can consider agents either as "threads" (which would be the case in this example) or "processes". There are some important distinctions between the two as we'll develop.
