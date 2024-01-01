@@ -51,16 +51,3 @@ if (args.write):
     time.sleep(1)
     print("I hope that it's good as it stands")
 
-if (args.kenough):
-    printing_lists = [
-            "", 
-            "             __    @@@", 
-            "            |  |  @   @", 
-            "           #|  | #@   @",
-											#	|			|		#	#	\			|																																																									
-
-    
-
-
-
-
