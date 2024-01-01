@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+
+import argparse
+import subprocess
+import time
+
+parser = argparse.ArgumentParser(description='Parse arguments for mystery. What will happen?')
+
+parser.add_argument("-a", "--add", nargs=2, required=False, help="Add ADDEND1 and ADDEND2 together and give the result.", metavar=("ADDEND1", "ADDEND2"))
+parser.add_argument("-b", "--bid", action='store_true', required=False, help="Bid the user farewell as the program exits.")
+parser.add_argument("-c", "--cos", nargs=1, type=int, default=0, help="Take the cosine of ANGLE", metavar=("ANGLE"))
+parser.add_argument("-d", "--divide", nargs=2, required=False, help="Provide two numbers to add together.", metavar=("DIVIDEND", "DIVISOR"))
+parser.add_argument("-e", "--exp", nargs=2, required=False, help="Exponentiate BASE by EXPONENT and give the result.", metavar=("BASE", "EXPONENT"))
+parser.add_argument("-g", "--greet", action='store_true', required=False, help="Print a friendly message to the user.")
+parser.add_argument("-i", "--interactive", action='store_true', required=False, help="Present all other non-help options in an interactive format and get user input for what to do next.")
+# add -i/--interactive. Present all options, choose one, then exit?
+parser.add_argument("-j", "--jazz-query", required=False, nargs='?', choices=['n', 'u', 'y'], default='u', help="Ask the user whether they like jazz.", metavar="y/n/u (optional)")
+parser.add_argument("-l", "--log", nargs=2, required=False, help="Take the base BASE logarithm of NUMBER and give the result.", metavar=("NUMBER", "BASE"))
+parser.add_argument("-m", "--multiply", nargs=2, required=False, help="Multiply FACTOR1 and FACTOR2 together and give the result.", metavar=("FACTOR1", "FACTOR2"))
+parser.add_argument("-o", "--open", action='store_true', required=False, help="Open a file and direct program output there instead of the terminal (\"standard output\" or \"stdout\").")
+parser.add_argument("-p", "--print", action='store_true', required=False, help="Print out all command-line arguments and their meanings that the user specified.")
+parser.add_argument("-q", "--quiet", action='store_true', required=False, help="Silence output.")
+parser.add_argument("-r", "--remainder", nargs=2, required=False, help="Divide VALUE by MODULUS and give the remainder.", metavar=("VALUE", "MODULUS"))
+parser.add_argument("-s", "--subtract", nargs=2, required=False, help="Subtract SUBTRAHEND from MINUEND and give the result.", metavar=("MINUEND", "SUBTRAHEND"))
+parser.add_argument("-t", "--tell", action='store_true', required=False, help="Tell the user about a song I might be currently listening to ;)")
+parser.add_argument("-u", "--ultra-verbose", action='store_true', required=False, help="Print MOAR verbose program output.")
+parser.add_argument("-v", "--verbose", action='store_true', required=False, help="Print verbose program output.")
+parser.add_argument("-w", "--write", action='store_true', required=False, help="Write a limerick for the user.")
+parser.add_argument("-z", "--zealous", action='store_true', required=False, help="Zealously recount the tragedy of Darth Plagueis the Wise. Why? Why not is more like it!")
+
+# Letters to add options for:
+# f, k, n, q, x, y 
+
+
+# example "the works" parser add method call:
+'''
+parser.add_argument("-n", "--nrange", nargs=2, default=1, choices=[, , , ], type=int, required=True, help="Iterate over this range", metavar=("MIN", "MAX"))
+'''
+
+
+args = parser.parse_args()
+
+if (args.write):
+    print("After semester demands")
+    time.sleep(1)
+    print("I had too much time on my hands")
+    time.sleep(1)
+    print("Here goes a short verse")
+    time.sleep(1)
+    print("It's quite rough and terse")
+    time.sleep(1)
+    print("I hope that it's good as it stands")
+
+if (args.kenough):
+    printing_lists = [
+            "", 
+            "             __    @@@", 
+            "            |  |  @   @", 
+            "           #|  | #@   @",
+											#	|			|		#	#	\			|																																																									
+
+    
+
+
+
+
