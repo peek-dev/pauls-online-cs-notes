@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
+# Run this on Linux, not Windows.
+# The author thanks you in advance since checking for Windows is a pain :)
+
 import argparse
 import subprocess
 import time
+import os
 
 parser = argparse.ArgumentParser(description='Parse arguments for mystery. What will happen?')
 
@@ -12,13 +16,13 @@ parser.add_argument("-c", "--cos", nargs=1, type=int, default=0, help="Take the 
 parser.add_argument("-d", "--divide", nargs=2, required=False, help="Provide two numbers to add together.", metavar=("DIVIDEND", "DIVISOR"))
 parser.add_argument("-e", "--exp", nargs=2, required=False, help="Exponentiate BASE by EXPONENT and give the result.", metavar=("BASE", "EXPONENT"))
 parser.add_argument("-g", "--greet", action='store_true', required=False, help="Print a friendly message to the user.")
-parser.add_argument("-i", "--interactive", action='store_true', required=False, help="Present all other non-help options in an interactive format and get user input for what to do next.")
+parser.add_argument("-i", "--integer-divide", required=False, nargs=2, type=int, help="Calculate integer division quotient of DIVIDEND by DIVISOR.", metavar=("DIVIDEND", "DIVISOR"))
 # add -i/--interactive. Present all options, choose one, then exit?
 parser.add_argument("-j", "--jazz-query", required=False, nargs='?', choices=['n', 'u', 'y'], default='u', help="Ask the user whether they like jazz.", metavar="y/n/u (optional)")
 parser.add_argument("-l", "--log", nargs=2, required=False, help="Take the base BASE logarithm of NUMBER and give the result.", metavar=("NUMBER", "BASE"))
 parser.add_argument("-m", "--multiply", nargs=2, required=False, help="Multiply FACTOR1 and FACTOR2 together and give the result.", metavar=("FACTOR1", "FACTOR2"))
 parser.add_argument("-o", "--open", action='store_true', required=False, help="Open a file and direct program output there instead of the terminal (\"standard output\" or \"stdout\").")
-parser.add_argument("-p", "--print", action='store_true', required=False, help="Print out all command-line arguments and their meanings that the user specified.")
+parser.add_argument("-p", "--print", action='store_true', required=False, help="Print out all command-line arguments that the user specified.")
 parser.add_argument("-q", "--quiet", action='store_true', required=False, help="Silence output.")
 parser.add_argument("-r", "--remainder", nargs=2, required=False, help="Divide VALUE by MODULUS and give the remainder.", metavar=("VALUE", "MODULUS"))
 parser.add_argument("-s", "--subtract", nargs=2, required=False, help="Subtract SUBTRAHEND from MINUEND and give the result.", metavar=("MINUEND", "SUBTRAHEND"))
@@ -29,7 +33,7 @@ parser.add_argument("-w", "--write", action='store_true', required=False, help="
 parser.add_argument("-z", "--zealous", action='store_true', required=False, help="Zealously recount the tragedy of Darth Plagueis the Wise. Why? Why not is more like it!")
 
 # Letters to add options for:
-# f, k, n, q, x, y 
+# f, k, n, x, y 
 
 
 # example "the works" parser add method call:
@@ -40,7 +44,91 @@ parser.add_argument("-n", "--nrange", nargs=2, default=1, choices=[, , , ], type
 
 args = parser.parse_args()
 
+verbose = (args.verbose) or (args.ultra_verbose)
+
+# Order: 
+# 1. Stdout redirection checks:
+
+redirect_fd = 1
+
+# 1a. Detect -q/--quiet: redirect to /dev/null (*nix) if so
+if (args.quiet):
+    try:
+        redirect_fd = os.open("/dev/null", os.O_APPEND | os.O_NONBLOCK | os.O_RDWR)
+        os.dup2(redirect_fd, 1)
+    except:
+        redirect_fd = -1
+
+# 1b. Detect redirection with (-o/--open)
+elif (args.open):
+    try:
+        redirect_fd = os.open("./output.txt", os.O_CREAT | os.O_APPEND | os.O_RDWR)
+        os.dup2(redirect_fd, 1)
+    except:
+        redirect_fd = -1
+
+if (args.ultra_verbose):
+    try:
+        subprocess.run("lscpu", shell=True)  # CPU info on Linux
+    except:
+        print("Failed to fetch system information.")
+       
+exit(0)
+
+# 2. Ultra-verbose introductory output: systeminfo (Windows) or lscpu (Linux)
+# 3. Greet (-g/--greet)
+# 4. Print out all command-line arguments entered (-p/--print)
+# 5. Arithmetic, in alphabetic order as specified: 
+#   5a. add (-a/--add)
+#   5c. cos (-c/--cos)
+#   5d. divide (-d/--divide)
+#   5e. exp (-e/--exp)
+#   5i. integer division (-i/--integer-divide)
+#   5l. log (-l/--log)
+#   5m. multiply (-m/--multiply)
+#   5r. remainder (-r/--remainder)
+#   5s. subtract (-s/--subtract)
+#
+# 6. Ya like jazz? (-j/--jazz-query) --> a. respond to user y/n directly or --> b. query interactively if u until input received
+
+if (args.jazz_query):
+    if verbose:
+        print("Proceeding to the jazz query handling...")
+
+    if (args.jazz_query == 'y'):
+        print("")
+    elif (args.jazz_query == 'n'):
+        print("You're no fun!")
+    else:
+        reply_received = False
+
+        while not reply_received:
+            response = input("Ya like jazz? ")
+
+            if ('y' in response.lower()) or ('n' in response.lower()):
+                reply_received = True 
+            
+        if (args.jazz_query == 'y'):
+            print("That's more like it! Jazz is so much fun!")
+        elif (args.jazz_query == 'n'):
+            print("You're no fun!")
+
+
+# 7. Tell the user about a cool song (-t/--tell)
+
+if (args.tell):
+    if verbose:
+        print("Telling the user about a cool song I \"recently\" (as of date of last maintenance) listened to.")
+
+    print("As I'm writing this code, I'm listening to \"Dancing Girls\" by Nik Kershaw from the album \"Human Racing\" (1984). It's a fun electrified synth-pop jam whose lineage you can trace through earlier '80s British synthpop like Yazoo and early Depeche Mode. Of course, you can also pin an influence from Kraftwerk's \"Computer World\" album (1981). It's super cool--I encourage you to give it a listen!")
+
+# 8. Write the user a limerick (-w/--write)
+
 if (args.write):
+
+    if verbose:
+        print("Proceeding to write limerick for user.\n")
+
     print("After semester demands")
     time.sleep(1)
     print("I had too much time on my hands")
@@ -50,4 +138,8 @@ if (args.write):
     print("It's quite rough and terse")
     time.sleep(1)
     print("I hope that it's good as it stands")
+
+# 9. Zealously recount the tragedy of Darth Plagueis the Wise (-z/--zealous)
+#
+# 10. Bid the user farewell as the program exits (-b/--bid)
 
