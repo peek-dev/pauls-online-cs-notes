@@ -1,9 +1,11 @@
 # Setting up the example
 
+Given: $POBITS = 8$, $LEVELS = 6$.
+
 Let's take an example `va = 0x0123456789abcdef`. This is larger than what we'll actually need, so we will have to isolate the VPN segments and POBITS accordingly while ignoring some of the highest-order bits.
-* The page size is $$2^{POBITS}$$ bytes, which in this case is $$2^8 = 256$$ bytes.
-    * There are $$256 / 8$$ page table entries _per page_ since a pagetable entry is 8 bytes (a constant size given in the writeup)--producing 32 page table entries per page.
-    * The number of bits needed to address all entries in one page is $$\log_2{32} = 5$$ bits, so each VPN segment will be 5 bits.
+* The page size is $2^{POBITS}$ bytes, which in this case is $2^8 = 256$ bytes.
+    * There are $256 / 8$ page table entries _per page_ since a pagetable entry is 8 bytes (a constant size given in the writeup)--producing 32 page table entries per page.
+    * The number of bits needed to address all entries in one page is $\log_2{32} = 5$ bits, so each VPN segment will be 5 bits.
 
 It's best here to go from least-significant to most-significant in how we parse the virtual address.
 * `POBITS = 8`, so the lowest-order 8 bits `0xef = 0b 1110 1111` constitute the _page offset_. We'll save this for later--namely, the very last step of the multi-level translation
